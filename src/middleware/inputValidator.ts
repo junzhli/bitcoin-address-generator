@@ -6,9 +6,13 @@ import logger from "../lib/logger";
 const log = logger("input-validator-handler");
 
 const _validatorsBody = {
-    hdSeed: body("seed").isString().customSanitizer((val: string) => {
-        return val.toLowerCase();
-    }),
+    hdSeed: body("seed")
+        .isString().customSanitizer((val: string) => {
+            if (typeof val !== "string") {
+                return "";
+            }
+            return val.toLowerCase();
+        }),
     hdAccount: body("account").isNumeric().isInt({min: 0}),
     hdChange: body("change").isNumeric().isInt({min: 0, max: 1}),
     hdIndex: body("index").isNumeric().isInt({min: 0}),

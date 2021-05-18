@@ -3,11 +3,11 @@ import * as bip39 from "bip39";
 import * as bitcoin from "bitcoinjs-lib";
 import { SeedCheckError } from "./error";
 
-const pathPrefix = "m/44'/0'";
+const pathSegwitPrefix = "m/84'/0'";
 
-const getPath = (account: number, change: boolean, index: number) => {
+const getSegwitPath = (account: number, change: boolean, index: number) => {
     const _change = (change) ? 1 : 0;
-    return `${pathPrefix}/${account}/${_change}/${index}`;
+    return `${pathSegwitPrefix}/${account}'/${_change}/${index}`;
 };
 
 const checkSeedPhrase = (seedPhrase: string) => {
@@ -35,11 +35,13 @@ const generateBitcoinSegwitAddress = async (seedPhrase: string, account: number,
     
     const seedBuffer = await bip39.mnemonicToSeed(seedPhrase);
     const root = bip32.fromSeed(seedBuffer);
-    const path = getPath(account, change, index);
+    const path = getSegwitPath(account, change, index);
     const instance = root.derivePath(path);
     return bitcoin.payments.p2wpkh({pubkey: instance.publicKey }).address!;
 };
 
 export {
+    getSegwitPath,
+    checkSeedPhrase,
     generateBitcoinSegwitAddress
 };
