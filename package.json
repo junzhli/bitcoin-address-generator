@@ -1,0 +1,50 @@
+{
+  "name": "bitcoin-address-generator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/junzhli/bitcoin-address-generator.git",
+  "author": "Jeremy Li <junzhli@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "start": "nodemon --watch '**/*.ts' --ignore '**/*.spec.ts' --exec 'ts-node' ./src/index.ts",
+    "prod": "NODE_ENV=production ts-node ./src/index.ts",
+    "test": "jest",
+    "lint-fix": "tslint --fix --project ."
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
+    "@babel/preset-env": "^7.14.0",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.23",
+    "@types/supertest": "^2.0.11",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.25.0",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "supertest": "^6.1.3",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-etc": "^1.13.9"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.11",
+    "@types/node": "^15.0.1",
+    "@types/swagger-ui-express": "^4.1.2",
+    "@types/validator": "^13.1.3",
+    "bip32": "^2.0.6",
+    "bip39": "^3.0.4",
+    "bitcoinjs-lib": "^5.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.10.1",
+    "swagger-ui-express": "^4.1.6",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4",
+    "winston": "^3.3.3"
+  }
+}
