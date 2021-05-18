@@ -1,4 +1,4 @@
-import { checkSeedPhrase, generateBitcoinSegwitAddress, getSegwitPath } from "../../src/lib/bitcoin";
+import { checkSeedPhrase, generateBitcoinSegwitAddress, generateNOutOfMP2SHAddress, getSegwitPath } from "../../src/lib/bitcoin";
 import { SeedCheckError } from "../../src/lib/bitcoin/error";
 
 describe("bitcoin lib testings", () => {
@@ -58,6 +58,79 @@ describe("bitcoin lib testings", () => {
             const change = true;
             const index = 0;
             await expect(generateBitcoinSegwitAddress(seed, account, change, index)).rejects.toThrow(SeedCheckError);
+        });
+    });
+
+    describe("generateNOutOfMP2SHAddress test", () => {
+        test("it should return address", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+            expect(generateNOutOfMP2SHAddress(addresses, publicKeys, 2)).toBe("363Ph3sUd9joLY3UU2ZL3bAJ8oq1rcuhp3");
+        });
+
+        test("it should throw error as one of addresses doesn't match the specified public", async () => {
+            const addresses = [
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+            expect(generateNOutOfMP2SHAddress.bind(undefined, addresses, publicKeys, 2)).toThrow(TypeError);
+        });
+
+        test("it should throw error as n is less than m in n out of m", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+            expect(generateNOutOfMP2SHAddress.bind(undefined, addresses, publicKeys, 4)).toThrow(TypeError);
+        });
+
+        test("it should throw error as number of addresses doesn't equal number of publicKeys", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+            expect(generateNOutOfMP2SHAddress.bind(undefined, addresses, publicKeys, 2)).toThrow(TypeError);
+        });
+
+        test("it should throw error as some arguments are invalid", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+            expect(generateNOutOfMP2SHAddress.bind(undefined, addresses, publicKeys, 2)).toThrow(Error);
         });
     });
 });

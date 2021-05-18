@@ -40,8 +40,32 @@ const generateBitcoinSegwitAddress = async (seedPhrase: string, account: number,
     return bitcoin.payments.p2wpkh({pubkey: instance.publicKey }).address!;
 };
 
+const generateNOutOfMP2SHAddress = (addresses: string[], publicKeys: string[], n: number) => {
+    if (publicKeys.length !== addresses.length) {
+        throw new TypeError("number of addresses doesn't equal to number of publicKeys");
+    }
+    
+    if (publicKeys.length < n) {
+        throw new TypeError("number of addresses/publicKeys (m) is less than n");
+    }
+    
+    const _publicKeys = publicKeys.map(p => Buffer.from(p, "hex"));
+
+    for (const [index, address] of addresses.entries()) {
+        const _address = bitcoin.payments.p2pkh({pubkey: _publicKeys[index] }).address!;
+        if (address !== _address) {
+            throw new TypeError(`address at index ${index} doesn't match the public key at index ${index}`);
+        }
+    }
+
+    return bitcoin.payments.p2sh({
+        redeem: bitcoin.payments.p2ms({ m: n, pubkeys: _publicKeys })
+    }).address!;
+};
+
 export {
     getSegwitPath,
     checkSeedPhrase,
-    generateBitcoinSegwitAddress
+    generateBitcoinSegwitAddress,
+    generateNOutOfMP2SHAddress
 };
