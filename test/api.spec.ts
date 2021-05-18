@@ -140,5 +140,84 @@ describe("integration testings", () => {
             expect(response.body.error).toBe(-1);
             expect(typeof response.body.message).toBe("string");
         }, GLOBAL_API_TIMEOUT);
+
+        test("it should be ok to generate bitcoin p2sh address with given addresses, public keys and n", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+                "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
+            ];
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+
+            const response = await supertest(app)
+                .post("/address/bitcoin/generateP2SHAddress")
+                .send({
+                    addresses,
+                    public_keys: publicKeys,
+                    n: 2
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(200);
+            expect(response.headers["content-type"]).toBe(HEADER_CONTENT_TYPE);
+            expect(typeof response.body).toBe("object");
+            expect(response.body.address).toBe("363Ph3sUd9joLY3UU2ZL3bAJ8oq1rcuhp3");
+        }, GLOBAL_API_TIMEOUT);
+
+        test("it should return error message with code 400 as invalid request (missing arguments)", async () => {
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+
+            const response = await supertest(app)
+                .post("/address/bitcoin/generateP2SHAddress")
+                .send({
+                    public_keys: publicKeys,
+                    n: 2
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.headers["content-type"]).toBe(HEADER_CONTENT_TYPE);
+            expect(typeof response.body).toBe("object");
+            expect(typeof response.body.error).toBe("number");
+            expect(response.body.error).toBe(-1);
+            expect(typeof response.body.message).toBe("string");
+        }, GLOBAL_API_TIMEOUT);
+
+        test("it should return error message with code 400 as invalid request (mismatch numbers between pubKeys and addresses)", async () => {
+            const addresses = [
+                "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
+                "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
+            ];
+            
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+            ];
+
+            const response = await supertest(app)
+                .post("/address/bitcoin/generateP2SHAddress")
+                .send({
+                    addresses,
+                    public_keys: publicKeys,
+                    n: 2
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(400);
+            expect(response.headers["content-type"]).toBe(HEADER_CONTENT_TYPE);
+            expect(typeof response.body).toBe("object");
+            expect(typeof response.body.error).toBe("number");
+            expect(response.body.error).toBe(-2);
+            expect(typeof response.body.message).toBe("string");
+        }, GLOBAL_API_TIMEOUT);
     });
 });

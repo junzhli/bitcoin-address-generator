@@ -1,5 +1,5 @@
 import express from "express";
-import { generateBitcoinSegwitAddress } from "../controller/address";
+import { generateBitcoinP2SHAddress, generateBitcoinSegwitAddress } from "../controller/address";
 import inputValidator from "../middleware/inputValidator";
 
 export default () => {
@@ -10,6 +10,8 @@ export default () => {
     /** Address API */
 
     router.post("/bitcoin/generateSegwitAddress", inputValidator.generateBitcoinSegwitAddress, inputValidator.resultHandler, generateBitcoinSegwitAddress);
+
+    router.post("/bitcoin/generateP2SHAddress", inputValidator.generateBitcoinP2SHAddress, inputValidator.resultHandler, generateBitcoinP2SHAddress);
 
     return router;
 };

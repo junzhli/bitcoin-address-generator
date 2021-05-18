@@ -1,6 +1,6 @@
 
 import express from "express";
-import {generateBitcoinSegwitAddress as _generateBitcoinSegwitAddress} from "../lib/bitcoin";
+import {generateBitcoinSegwitAddress as _generateBitcoinSegwitAddress, generateNOutOfMP2SHAddress} from "../lib/bitcoin";
 import { SeedCheckError } from "../lib/bitcoin/error";
 
 const generateBitcoinSegwitAddress = async (
@@ -46,6 +46,45 @@ const generateBitcoinSegwitAddress = async (
     }
 };
 
+const generateBitcoinP2SHAddress = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+) => {
+    try {
+        const {public_keys, addresses, n} = req.body;
+        if (!Array.isArray(public_keys) 
+        || !Array.isArray(addresses) 
+        || typeof n !== "number") {
+            throw new TypeError("public_keys, addresses or n is not valid type");
+        }
+
+        try {
+            const address = generateNOutOfMP2SHAddress(addresses, public_keys, n);
+            res.status(200).json({
+                address
+            });
+        } catch (error) {
+            if (error instanceof TypeError) {
+                res.status(400).json({
+                    error: -2,
+                    message: `Some arguments is not expected: ${error.message}`
+                });
+                return;
+            } else {
+                res.status(400).json({
+                    error: -2,
+                    message: `Some arguments is not expected: unknown`
+                });
+                return;
+            }
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
-    generateBitcoinSegwitAddress
+    generateBitcoinSegwitAddress,
+    generateBitcoinP2SHAddress
 };

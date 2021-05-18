@@ -16,6 +16,9 @@ const _validatorsBody = {
     hdAccount: body("account").isNumeric().isInt({min: 0}),
     hdChange: body("change").isNumeric().isInt({min: 0, max: 1}),
     hdIndex: body("index").isNumeric().isInt({min: 0}),
+    addresses: body("addresses").isArray(),
+    publicKeys: body("public_keys").isArray(),
+    n: body("n").isNumeric().isInt({min: 1})
 };
 
 const generateBitcoinSegwitAddress = [
@@ -23,6 +26,12 @@ const generateBitcoinSegwitAddress = [
     _validatorsBody.hdAccount,
     _validatorsBody.hdChange,
     _validatorsBody.hdIndex
+];
+
+const generateBitcoinP2SHAddress = [
+    _validatorsBody.addresses,
+    _validatorsBody.publicKeys,
+    _validatorsBody.n
 ];
 
 const resultHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -37,5 +46,6 @@ const resultHandler = (req: express.Request, res: express.Response, next: expres
 
 export default {
     generateBitcoinSegwitAddress,
+    generateBitcoinP2SHAddress,
     resultHandler
 };
