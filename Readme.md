@@ -28,6 +28,7 @@ $ yarn install --frozen-lockfile
 
 Run
 -----
+Open port at 8080 or specified one in environment variable `PORT`
 
 * For development
 
@@ -55,7 +56,7 @@ $ yarn run prod
 Available APIs
 -----
 
-[See on Swagger /api-docs](https://glints-node-js-backend.herokuapp.com/api-docs)
+See on Swagger /api-docs or OpenAPI docs `swagger.json` (open with Swagger viewer) under root project for more details
 
 Author
 -----
