@@ -1,5 +1,6 @@
 import express from "express";
-// import swaggerDoc from "../swagger.json";
+import swaggerUi from "swagger-ui-express";
+import swaggerDoc from "../swagger.json";
 import {errorHandler} from "./middleware/errorHandlers";
 import loggerHandler from "./middleware/loggerHandler";
 import address from "./router/address";
@@ -11,7 +12,7 @@ app.use(loggerHandler);
 
 app.use("/address", address());
 
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use(errorHandler);
 // app.use(notFoundHandler);
