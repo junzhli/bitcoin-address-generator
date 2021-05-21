@@ -98,25 +98,10 @@
             "schema": {
               "type": "object",
               "required": [
-                "addresses",
                 "public_keys",
                 "n"
               ],
               "properties": {
-                "addresses": {
-                  "type": "array",
-                  "default": [
-                    "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
-                    "1BAgzvv2gsUjx7owJeSFhtexQ97yWQFEZe",
-                    "16nnTfKoJijyrKcxzD4U9x5ku6saCoCYdj"
-                  ],
-                  "description": "P2PKH addresses",
-                  "items": {
-                    "type": "string",
-                    "default": "1PLDRLacEkAaaiWnfojVDb5hWpwXvKJrRa",
-                    "description": "P2PKH address"
-                  }
-                },
                 "public_keys": {
                   "type": "array",
                   "default": [
@@ -133,7 +118,7 @@
                 "n": {
                   "type": "number",
                   "default": 2,
-                  "description": "n out of m (number of addresses/public_keys)"
+                  "description": "n out of m (number of public_keys)"
                 }
               }
             }
