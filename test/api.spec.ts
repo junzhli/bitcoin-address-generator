@@ -141,7 +141,7 @@ describe("integration testings", () => {
             expect(typeof response.body.message).toBe("string");
         }, GLOBAL_API_TIMEOUT);
 
-        test("it should be ok to generate bitcoin p2sh address with given addresses, public keys and n", async () => {
+        test("it should be ok to generate bitcoin p2sh address with given public keys and n", async () => {
             const publicKeys = [
                 "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
                 "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
