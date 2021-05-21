@@ -3,11 +3,13 @@ import * as bip39 from "bip39";
 import * as bitcoin from "bitcoinjs-lib";
 import { SeedCheckError } from "./error";
 
+const pathLegacyPrefix = "m/44'/0'";
 const pathSegwitPrefix = "m/84'/0'";
 
-const getSegwitPath = (account: number, change: boolean, index: number) => {
+const getPath = (account: number, change: boolean, index: number, legacy: boolean = false) => {
     const _change = (change) ? 1 : 0;
-    return `${pathSegwitPrefix}/${account}'/${_change}/${index}`;
+    return (!legacy) ? `${pathSegwitPrefix}/${account}'/${_change}/${index}` : 
+    `${pathLegacyPrefix}/${account}'/${_change}/${index}`;
 };
 
 const checkSeedPhrase = (seedPhrase: string) => {
@@ -35,28 +37,17 @@ const generateBitcoinSegwitAddress = async (seedPhrase: string, account: number,
     
     const seedBuffer = await bip39.mnemonicToSeed(seedPhrase);
     const root = bip32.fromSeed(seedBuffer);
-    const path = getSegwitPath(account, change, index);
+    const path = getPath(account, change, index);
     const instance = root.derivePath(path);
     return bitcoin.payments.p2wpkh({pubkey: instance.publicKey }).address!;
 };
 
-const generateNOutOfMP2SHAddress = (addresses: string[], publicKeys: string[], n: number) => {
-    if (publicKeys.length !== addresses.length) {
-        throw new TypeError("number of addresses doesn't equal to number of publicKeys");
-    }
-    
+const generateNOutOfMP2SHAddress = (publicKeys: string[], n: number) => {
     if (publicKeys.length < n) {
-        throw new TypeError("number of addresses/publicKeys (m) is less than n");
+        throw new TypeError("number of publicKeys (m) is less than n");
     }
     
     const _publicKeys = publicKeys.map(p => Buffer.from(p, "hex"));
-
-    for (const [index, address] of addresses.entries()) {
-        const _address = bitcoin.payments.p2pkh({pubkey: _publicKeys[index] }).address!;
-        if (address !== _address) {
-            throw new TypeError(`address at index ${index} doesn't match the public key at index ${index}`);
-        }
-    }
 
     return bitcoin.payments.p2sh({
         redeem: bitcoin.payments.p2ms({ m: n, pubkeys: _publicKeys })
@@ -64,7 +55,7 @@ const generateNOutOfMP2SHAddress = (addresses: string[], publicKeys: string[], n
 };
 
 export {
-    getSegwitPath,
+    getPath,
     checkSeedPhrase,
     generateBitcoinSegwitAddress,
     generateNOutOfMP2SHAddress
