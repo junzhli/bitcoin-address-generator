@@ -107,12 +107,12 @@
                   "default": [
                     "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
                     "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
-                    "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
+                    "04909f1f1bc5ced0885beafe1552be8739a69b887b316504e133816804a43c5b191e13185a7a1a1195569f73a0add03d4b0edcb74b5422abc85a255d897a8076c7"
                   ],
-                  "description": "Public keys in hex",
+                  "description": "Public keys in hex (compressed or uncompressed)",
                   "items": {
                     "type": "string",
-                    "description": "Public key in hex"
+                    "description": "Public key in hex (compressed or uncompressed)"
                   }
                 },
                 "n": {
