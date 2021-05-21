@@ -62,13 +62,22 @@ describe("bitcoin lib testings", () => {
     });
 
     describe("generateNOutOfMP2SHAddress test", () => {
-        test("it should return address", async () => {
+        test("it should return address with compressed public key", async () => {
             const publicKeys = [
                 "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
                 "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
                 "03375f613b3d4c6c62f42fb74652c9452007ebfe57c6ed29ff59e87ec29b2d6ce6"
             ];
             expect(generateNOutOfMP2SHAddress(publicKeys, 2)).toBe("363Ph3sUd9joLY3UU2ZL3bAJ8oq1rcuhp3");
+        });
+
+        test("it should return address with uncompressed public key", async () => {
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "04909f1f1bc5ced0885beafe1552be8739a69b887b316504e133816804a43c5b191e13185a7a1a1195569f73a0add03d4b0edcb74b5422abc85a255d897a8076c7"
+            ];
+            expect(generateNOutOfMP2SHAddress(publicKeys, 2)).toBe("3Goc64p9HHWCwdcnMe42F4QbtgwyGqrj8x");
         });
 
         test("it should throw error as n is less than m in n out of m", async () => {

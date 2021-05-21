@@ -162,6 +162,27 @@ describe("integration testings", () => {
             expect(response.body.address).toBe("363Ph3sUd9joLY3UU2ZL3bAJ8oq1rcuhp3");
         }, GLOBAL_API_TIMEOUT);
 
+        test("it should be ok to generate bitcoin p2sh address with given public keys and n (with uncompressed public key)", async () => {
+            const publicKeys = [
+                "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a46",
+                "02290fab3a48a7d43e1db0a74404d32660648841faa16e069bced29bda4a5e28c1",
+                "04909f1f1bc5ced0885beafe1552be8739a69b887b316504e133816804a43c5b191e13185a7a1a1195569f73a0add03d4b0edcb74b5422abc85a255d897a8076c7"
+            ];
+
+            const response = await supertest(app)
+                .post("/address/bitcoin/generateP2SHAddress")
+                .send({
+                    public_keys: publicKeys,
+                    n: 2
+                })
+                .set("Content-Type", "application/json");
+
+            expect(response.status).toBe(200);
+            expect(response.headers["content-type"]).toBe(HEADER_CONTENT_TYPE);
+            expect(typeof response.body).toBe("object");
+            expect(response.body.address).toBe("3Goc64p9HHWCwdcnMe42F4QbtgwyGqrj8x");
+        }, GLOBAL_API_TIMEOUT);
+
         test("it should return error message with code 400 as invalid request (invalid arguments)", async () => {
             const publicKeys = [
                 "033b3aa196c22d0765965ea37ad01eaf8eafbce74e15dc8c47fdaa193fc02e7a",

@@ -2,6 +2,9 @@
 import express from "express";
 import {generateBitcoinSegwitAddress as _generateBitcoinSegwitAddress, generateNOutOfMP2SHAddress} from "../lib/bitcoin";
 import { SeedCheckError } from "../lib/bitcoin/error";
+import logger from "../lib/logger";
+
+const log = logger("address-controller");
 
 const generateBitcoinSegwitAddress = async (
     req: express.Request,
@@ -75,6 +78,7 @@ const generateBitcoinP2SHAddress = async (
                     error: -2,
                     message: `Some arguments is not expected: unknown`
                 });
+                log.log({ level: "error", message: "", error });
                 return;
             }
         }

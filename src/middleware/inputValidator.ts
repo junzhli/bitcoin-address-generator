@@ -43,8 +43,8 @@ const _validatorsBody = {
                     return Promise.reject(new Error(`one of public keys is not represented by string: ${JSON.stringify(v)}`));
                 }
 
-                if (!/^([A-Fa-f0-9]){66}$/.test(v)) {
-                    return Promise.reject(new Error(`one of public keys is not an appropriate string: ${v}`));
+                if (!/^([A-Fa-f0-9]){66,130}$/.test(v)) {
+                    return Promise.reject(new Error(`one of public keys is not an appropriate length (either 66 or 130): ${v}`));
                 }
 
                 set.add(v.toLowerCase());
