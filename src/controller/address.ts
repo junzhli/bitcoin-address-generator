@@ -52,15 +52,14 @@ const generateBitcoinP2SHAddress = async (
     next: express.NextFunction
 ) => {
     try {
-        const {public_keys, addresses, n} = req.body;
+        const {public_keys, n} = req.body;
         if (!Array.isArray(public_keys) 
-        || !Array.isArray(addresses) 
         || typeof n !== "number") {
-            throw new TypeError("public_keys, addresses or n is not valid type");
+            throw new TypeError("public_keys or n is not valid type");
         }
 
         try {
-            const address = generateNOutOfMP2SHAddress(addresses, public_keys, n);
+            const address = generateNOutOfMP2SHAddress(public_keys, n);
             res.status(200).json({
                 address
             });
